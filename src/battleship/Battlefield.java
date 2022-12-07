@@ -7,6 +7,8 @@ public class Battlefield {
   private int width;
   private int height;
   private ArrayList<Ship> ships;
+  private ArrayList<Coordinate> hits;
+  private ArrayList<Coordinate> misses;
   public static final int MAX_HEIGHT = 26;
 
   public Battlefield() {
@@ -20,6 +22,8 @@ public class Battlefield {
     this.width = width;
     this.height = height;
     this.ships = new ArrayList<>();
+    this.hits = new ArrayList<>();
+    this.misses = new ArrayList<>();
   }
 
   public void display() {
@@ -36,7 +40,11 @@ public class Battlefield {
       System.out.printf("%c", 'A' + y);
       for (int x = 1; x <= width; x++) {
         Coordinate coordinate = new Coordinate(x, y);
-        if (isShipCoordinate(coordinate)) {
+        if (containsCoordinate(hits, coordinate)) {
+          System.out.printf(format, "X");
+        } else if (containsCoordinate(misses, coordinate)) {
+          System.out.printf(format, "M");
+        } else if (isShipCoordinate(coordinate)) {
           System.out.printf(format, "O");
         } else {
           System.out.printf(format, "~");
@@ -44,6 +52,15 @@ public class Battlefield {
       }
       System.out.println();
     }
+  }
+
+  private boolean containsCoordinate(ArrayList<Coordinate> list, Coordinate coordinate) {
+    for (Coordinate listCoordinate : list) {
+      if (listCoordinate.equals(coordinate)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public boolean isInBounds(Coordinate coordinate) {
@@ -76,5 +93,19 @@ public class Battlefield {
       }
     }
     return false;
+  }
+
+  public boolean shoot(Coordinate coordinate) {
+    if (!isInBounds(coordinate) && !containsCoordinate(hits, coordinate) && !containsCoordinate(
+        misses, coordinate)) {
+      throw new IllegalArgumentException();
+    }
+    if (isShipCoordinate(coordinate)) {
+      hits.add(coordinate);
+      return true;
+    } else {
+      misses.add(coordinate);
+      return false;
+    }
   }
 }

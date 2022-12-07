@@ -37,6 +37,29 @@ public class Main {
     battlefield.display();
     placeShip(battlefield, new Ship("Destroyer", 2));
     battlefield.display();
+
+    startGame(battlefield);
+  }
+
+  public static void startGame(Battlefield battlefield) {
+    System.out.println("The game starts!");
+    while (true) {
+      String line = s.nextLine();
+      Coordinate coordinate = new Coordinate(line);
+      System.out.println("Take a shot!");
+      try {
+        if (battlefield.shoot(coordinate)) {
+          System.out.println("You hit a ship!");
+        } else {
+          System.out.println("You missed!");
+        }
+        battlefield.display();
+      } catch (IllegalArgumentException e) {
+        System.out.println("Error you entered the wrong coordinates! Try again!");
+        continue;
+      }
+      break;
+    }
   }
 
   public static void placeShip(Battlefield battlefield, Ship ship) {
