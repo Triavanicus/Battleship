@@ -43,12 +43,15 @@ public class Main {
 
   public static void startGame(Battlefield battlefield) {
     System.out.println("The game starts!");
+    battlefield.display(true);
     while (true) {
       String line = s.nextLine();
       Coordinate coordinate = new Coordinate(line);
       System.out.println("Take a shot!");
       try {
-        if (battlefield.shoot(coordinate)) {
+        boolean hit = battlefield.shoot(coordinate);
+        battlefield.display(true);
+        if (hit) {
           System.out.println("You hit a ship!");
         } else {
           System.out.println("You missed!");

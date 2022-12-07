@@ -27,6 +27,10 @@ public class Battlefield {
   }
 
   public void display() {
+    display(false);
+  }
+
+  public void display(boolean fow) {
     int numDigits = 0;//String.valueOf(width).length();
     String format = " %" + (numDigits + 1) + "s";
 
@@ -44,7 +48,7 @@ public class Battlefield {
           System.out.printf(format, "X");
         } else if (containsCoordinate(misses, coordinate)) {
           System.out.printf(format, "M");
-        } else if (isShipCoordinate(coordinate)) {
+        } else if (isShipCoordinate(coordinate) && !fow) {
           System.out.printf(format, "O");
         } else {
           System.out.printf(format, "~");
