@@ -28,16 +28,12 @@ public class Main {
   public static void main(String[] args) {
     Battlefield battlefield = new Battlefield();
     battlefield.display();
+
     placeShip(battlefield, new Ship("Aircraft Carrier", 5));
-    battlefield.display();
     placeShip(battlefield, new Ship("Battleship", 4));
-    battlefield.display();
     placeShip(battlefield, new Ship("Submarine", 3));
-    battlefield.display();
     placeShip(battlefield, new Ship("Cruiser", 3));
-    battlefield.display();
     placeShip(battlefield, new Ship("Destroyer", 2));
-    battlefield.display();
 
     startGame(battlefield);
   }
@@ -47,7 +43,7 @@ public class Main {
     battlefield.display(true);
     System.out.println("Take a shot!");
     while (true) {
-      String line = s.nextLine();
+      String line = s.nextLine().toUpperCase();
       Coordinate coordinate = new Coordinate(line);
       try {
         TargetStatus status = battlefield.shootTarget(coordinate);
@@ -77,7 +73,7 @@ public class Main {
         ship.getSize());
     while (true) {
       String line = s.nextLine();
-      String[] coordinates = line.split(" ");
+      String[] coordinates = line.toUpperCase().split(" ");
 
       Coordinate start = new Coordinate(coordinates[0]);
       Coordinate end = new Coordinate(coordinates[1]);
@@ -91,5 +87,6 @@ public class Main {
       }
       break;
     }
+    battlefield.display();
   }
 }
