@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class Battlefield {
 
-  private int width;
-  private int height;
-  private ArrayList<Ship> ships;
-  private ArrayList<Coordinate> hits;
-  private ArrayList<Coordinate> misses;
+  private final int width;
+  private final int height;
+  private final ArrayList<Ship> ships;
+  private final ArrayList<Coordinate> hits;
+  private final ArrayList<Coordinate> misses;
   public static final int MAX_HEIGHT = 26;
 
   public Battlefield() {
@@ -67,16 +67,16 @@ public class Battlefield {
     return false;
   }
 
-  public boolean isInBounds(Coordinate coordinate) {
-    return (coordinate.getX() >= 1 && coordinate.getX() <= width && coordinate.getY() >= 0
+  public boolean outOfBounds(Coordinate coordinate) {
+    return !(coordinate.getX() >= 1 && coordinate.getX() <= width && coordinate.getY() >= 0
         && coordinate.getY() <= height);
   }
 
   public void placeShip(Ship ship) {
     for (Coordinate coordinate :
         ship.getCoordinates()) {
-      if (!isInBounds(coordinate)) {
-        throw new CoordinateOutOfBoundsException();
+      if (outOfBounds(coordinate)) {
+        throw new IllegalArgumentException("Error! Wrong ship location! Try again:");
       }
 
       if (getShipAtCoordinate(coordinate) != null
@@ -84,7 +84,8 @@ public class Battlefield {
           || getShipAtCoordinate(coordinate.offset(0, -1)) != null
           || getShipAtCoordinate(coordinate.offset(1, 0)) != null
           || getShipAtCoordinate(coordinate.offset(-1, 0)) != null) {
-        throw new IllegalShipPlacementException();
+        throw new IllegalArgumentException(
+            "Error! you placed it too close to another one. Try again:");
       }
     }
     ships.add(ship);
@@ -102,9 +103,8 @@ public class Battlefield {
   }
 
   public TargetStatus shootTarget(Coordinate coordinate) {
-    if (!isInBounds(coordinate) && !containsCoordinate(hits, coordinate) && !containsCoordinate(
-        misses, coordinate)) {
-      throw new IllegalArgumentException();
+    if (outOfBounds(coordinate)) {
+      throw new IllegalArgumentException("Error! You entered the wrong coordinates! Try again:");
     }
     Ship ship = getShipAtCoordinate(coordinate);
     if (ship != null) {

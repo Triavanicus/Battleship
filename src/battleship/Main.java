@@ -67,8 +67,7 @@ public class Main {
           System.out.println("You missed!");
         }
       } catch (IllegalArgumentException e) {
-        System.out.println("Error you entered the wrong coordinates! Try again:");
-        continue;
+        System.out.println(e.getMessage());
       }
     }
   }
@@ -78,25 +77,16 @@ public class Main {
         ship.getSize());
     while (true) {
       String line = s.nextLine();
-      String[] coords = line.split(" ");
+      String[] coordinates = line.split(" ");
 
-      Coordinate start = new Coordinate(coords[0]);
-      Coordinate end = new Coordinate(coords[1]);
+      Coordinate start = new Coordinate(coordinates[0]);
+      Coordinate end = new Coordinate(coordinates[1]);
 
       try {
         ship.setLocation(start, end);
         battlefield.placeShip(ship);
-      } catch (IllegalCoordinatesException e) {
-        System.out.println("Error! Wrong ship location! Try again:");
-        continue;
-      } catch (IllegalShipLengthException e) {
-        System.out.printf("Error! Wrong length of the %s! Try again:%n", ship.getName());
-        continue;
-      } catch (IllegalShipPlacementException e) {
-        System.out.println("Error! you placed it too close to another one. Try again:");
-        continue;
-      } catch (CoordinateOutOfBoundsException e) {
-        System.out.println("Error! Invalid coordinate.");
+      } catch (IllegalArgumentException e) {
+        System.out.println(e.getMessage());
         continue;
       }
       break;

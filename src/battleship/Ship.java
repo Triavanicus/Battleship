@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 public class Ship {
 
-  private String name;
-  private int size;
+  private final String name;
+  private final int size;
 
   private Coordinate[] coordinates;
-  private ArrayList<Coordinate> hitCoordinates;
-  private int numHits;
+  private final ArrayList<Coordinate> hitCoordinates;
   private boolean hasSunk;
 
   public Ship(String name, int size) {
@@ -18,12 +17,12 @@ public class Ship {
     this.coordinates = new Coordinate[size];
     this.hitCoordinates = new ArrayList<>();
     this.hasSunk = false;
-    this.numHits = 0;
   }
 
   public void setLocation(Coordinate start, Coordinate end) {
     if (start.distanceTo(end) != size) {
-      throw new IllegalShipLengthException();
+      throw new IllegalArgumentException(
+          String.format("Error! Wrong length of the %s! Try again:%n", this.name));
     }
 
     coordinates = start.pathTo(end);

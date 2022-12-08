@@ -2,17 +2,8 @@ package battleship;
 
 public class Coordinate {
 
-  private int x;
-  private int y;
-
-  public Coordinate() {
-    this(0, 0);
-  }
-
-  public Coordinate(Coordinate other) {
-    this.x = other.x;
-    this.y = other.y;
-  }
+  private final int x;
+  private final int y;
 
   public Coordinate(int x, int y) {
     this.x = x;
@@ -28,21 +19,13 @@ public class Coordinate {
     return x;
   }
 
-  public void setX(int x) {
-    this.x = x;
-  }
-
   public int getY() {
     return y;
   }
 
-  public void setY(int y) {
-    this.y = y;
-  }
-
   public int distanceTo(Coordinate other) {
     if (this.x != other.x && this.y != other.y) {
-      throw new IllegalCoordinatesException();
+      return -1;
     }
 
     return Math.max(Math.abs(this.x - other.x), Math.abs(this.y - other.y)) + 1;
