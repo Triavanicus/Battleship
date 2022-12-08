@@ -48,7 +48,7 @@ public class Battlefield {
           System.out.printf(format, "X");
         } else if (containsCoordinate(misses, coordinate)) {
           System.out.printf(format, "M");
-        } else if (isShipCoordinate(coordinate) && !fow) {
+        } else if (getShipAtCoordinate(coordinate) != null && !fow) {
           System.out.printf(format, "O");
         } else {
           System.out.printf(format, "~");
@@ -79,37 +79,50 @@ public class Battlefield {
         throw new CoordinateOutOfBoundsException();
       }
 
-      if (isShipCoordinate(coordinate) || isShipCoordinate(coordinate.offset(0, 1))
-          || isShipCoordinate(coordinate.offset(0, -1)) || isShipCoordinate(coordinate.offset(1, 0))
-          || isShipCoordinate(coordinate.offset(-1, 0))) {
+      if (getShipAtCoordinate(coordinate) != null
+          || getShipAtCoordinate(coordinate.offset(0, 1)) != null
+          || getShipAtCoordinate(coordinate.offset(0, -1)) != null
+          || getShipAtCoordinate(coordinate.offset(1, 0)) != null
+          || getShipAtCoordinate(coordinate.offset(-1, 0)) != null) {
         throw new IllegalShipPlacementException();
       }
     }
     ships.add(ship);
   }
 
-  private boolean isShipCoordinate(Coordinate other) {
+  private Ship getShipAtCoordinate(Coordinate other) {
     for (Ship ship : ships) {
       for (Coordinate coordinate : ship.getCoordinates()) {
         if (coordinate.equals(other)) {
-          return true;
+          return ship;
         }
       }
     }
-    return false;
+    return null;
   }
 
-  public boolean shoot(Coordinate coordinate) {
+  public TargetStatus shootTarget(Coordinate coordinate) {
     if (!isInBounds(coordinate) && !containsCoordinate(hits, coordinate) && !containsCoordinate(
         misses, coordinate)) {
       throw new IllegalArgumentException();
     }
-    if (isShipCoordinate(coordinate)) {
+    Ship ship = getShipAtCoordinate(coordinate);
+    if (ship != null) {
       hits.add(coordinate);
-      return true;
+      ship.hit(coordinate);
     } else {
       misses.add(coordinate);
-      return false;
     }
+    return new TargetStatus(ship);
+  }
+
+  public int getNumShipsLeft() {
+    int result = 0;
+    for (Ship ship : ships) {
+      if (!ship.getHasSunk()) {
+        result++;
+      }
+    }
+    return result;
   }
 }

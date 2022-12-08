@@ -1,5 +1,6 @@
 package battleship;
 
+import battleship.TargetStatus.Type;
 import java.util.Scanner;
 
 public class Main {
@@ -44,24 +45,31 @@ public class Main {
   public static void startGame(Battlefield battlefield) {
     System.out.println("The game starts!");
     battlefield.display(true);
+    System.out.println("Take a shot!");
     while (true) {
       String line = s.nextLine();
       Coordinate coordinate = new Coordinate(line);
-      System.out.println("Take a shot!");
       try {
-        boolean hit = battlefield.shoot(coordinate);
+        TargetStatus status = battlefield.shootTarget(coordinate);
         battlefield.display(true);
-        if (hit) {
-          System.out.println("You hit a ship!");
+        if (status.type == Type.HIT) {
+          if (status.ship.getHasSunk()) {
+            if (battlefield.getNumShipsLeft() == 0) {
+              System.out.println("You sank the last ship. You won. Congratulations!");
+              return;
+            } else {
+              System.out.println("You sank a ship! Specify a new target:");
+            }
+          } else {
+            System.out.println("You hit a ship! Try again:");
+          }
         } else {
           System.out.println("You missed!");
         }
-        battlefield.display();
       } catch (IllegalArgumentException e) {
-        System.out.println("Error you entered the wrong coordinates! Try again!");
+        System.out.println("Error you entered the wrong coordinates! Try again:");
         continue;
       }
-      break;
     }
   }
 
